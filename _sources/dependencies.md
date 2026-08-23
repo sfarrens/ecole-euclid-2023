@@ -6,7 +6,7 @@ This page lists the mandatory dependencies required to use the `mycosmo` package
 
 The following packages are required for basic usage of `mycosmo`:
 
-- **Python** (>=3.11): The programming language used to develop the package
+- **Python** (>=3.12): The programming language used to develop the package
 - **NumPy**: Required for numerical computations and array operations
 
 ## Installation
@@ -19,42 +19,41 @@ pip install mycosmo
 
 This will install the package and its core dependencies (NumPy).
 
-## Optional Dependencies
+## Development Dependencies
 
-While not required for basic usage, the following optional dependencies are available for specific use cases:
+For development, `mycosmo` uses [uv](https://docs.astral.sh/uv/) and groups its
+development-only dependencies into
+[dependency groups](https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups)
+in `pyproject.toml`, rather than `pip` extras:
 
-- **Documentation**: myst-parser, numpydoc, sphinx, sphinx-book-theme
-- **Linting**: black, isort
-- **Release**: build, twine
-- **Testing**: pytest, pytest-cov, pytest-emoji, pytest-pydocstyle
-- **Verification**: astropy
-- **Development**: Includes all of the above (docs, lint, release, test)
+- **docs**: myst-parser, numpydoc, sphinx, sphinx-book-theme
+- **lint**: mypy, pre-commit, ruff
+- **profile**: line_profiler, memray, snakeviz
+- **test**: pytest, pytest-cov, pytest-emoji
+- **verify**: astropy
 
-You can install these optional dependencies using pip with the appropriate extras in development mode:
+You can sync one or more of these groups with `uv sync`:
 
 ```bash
 # For documentation
-pip install -e "mycosmo[docs]"
+uv sync --group docs
 
-# For linting
-pip install -e "mycosmo[lint]"
-
-# For release
-pip install -e "mycosmo[release]"
+# For linting and type checking
+uv sync --group lint
 
 # For profiling
-pip install -e "mycosmo[profile]"
+uv sync --group profile
 
 # For testing
-pip install -e "mycosmo[test]"
+uv sync --group test
 
 # For verification
-pip install -e "mycosmo[verify]"
+uv sync --group verify
 
-# For development (includes all optional dependencies)
-pip install -e "mycosmo[dev]"
+# For everything at once
+uv sync --all-groups
 ```
 
 ## Version Compatibility
 
-The package is tested and guaranteed to work with Python 3.11 or higher. While it may work with earlier versions, these are not officially supported. 
+The package is tested and guaranteed to work with Python 3.12 or higher. While it may work with earlier versions, these are not officially supported.
