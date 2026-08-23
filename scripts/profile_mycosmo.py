@@ -1,142 +1,81 @@
-#!/usr/bin/env python3
-"""
-Profiling script for mycosmo package.
-Demonstrates different profiling approaches for scientific computing code.
+"""Profile Mycosmo.
+
+This script profiles the mycosmo package using timeit, cProfile,
+line_profiler and memray.
+
 """
 
 import cProfile
-import io
 import pstats
-import sys
 import timeit
-from datetime import datetime
 
+import memray
 import numpy as np
 from line_profiler import LineProfiler
-from memory_profiler import profile
 
 from mycosmo import cosmology
 
-
-def save_results(filename, content):
-    """Save profiling results to a file."""
-    with open(filename, "w") as f:
-        f.write(content)
+REDSHIFTS = np.linspace(0, 10, 100_000)
+COSMO_DICT = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
 
 
 def profile_with_timeit():
-    """Basic timing using timeit."""
-    print("\n=== Timeit Profiling ===")
-    results = []
-
-    # Example timing of cosmology functions
-    setup = """
-from mycosmo import cosmology
-cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-redshift = 0.0
-"""
-    # Time hubble function
-    stmt = "cosmology.hubble(redshift, cosmo_dict)"
-    number = 1000
-    time = timeit.timeit(stmt, setup, number=number)
-    result = f"hubble() average time per call: {time/number:.6f} seconds"
-    print(result)
-    results.append(result)
-
-    # Time critical_density function
-    stmt = "cosmology.critical_density(redshift, cosmo_dict)"
-    time = timeit.timeit(stmt, setup, number=number)
-    result = f"critical_density() average time per call: {time/number:.6f} seconds"
-    print(result)
-    results.append(result)
-
-    # Save results
-    save_results("timeit_results.log", "\n".join(results))
+    """Time each function with timeit.repeat."""
+    for name, func in (
+        ("hubble", cosmology.hubble),
+        ("critical_density", cosmology.critical_density),
+    ):
+        samples = timeit.repeat(
+            lambda: func(REDSHIFTS, COSMO_DICT), repeat=5, number=100
+        )
+        print(f"{name}(): {min(samples) / 100:.6e}s per call")
 
 
 def profile_with_cprofile():
     """Function-level profiling using cProfile."""
-    print("\n=== cProfile Profiling ===")
     profiler = cProfile.Profile()
     profiler.enable()
-
-    # Run cosmology calculations
-    cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-    redshifts = np.linspace(0, 10, 1000)
-
-    # Profile both functions
-    cosmology.hubble(redshifts, cosmo_dict)
-    cosmology.critical_density(redshifts, cosmo_dict)
-
+    cosmology.hubble(REDSHIFTS, COSMO_DICT)
+    cosmology.critical_density(REDSHIFTS, COSMO_DICT)
     profiler.disable()
-    s = io.StringIO()
-    ps = pstats.Stats(profiler, stream=s).sort_stats("cumulative")
-    ps.print_stats(20)  # Print top 20 functions
-    results = s.getvalue()
-    print(results)
 
-    # Save results
-    save_results("cprofile_results.prof", results)
-    # Also save in a more readable format
-    save_results("cprofile_results.log", results)
+    profiler.dump_stats("cprofile_results.prof")
+    pstats.Stats(profiler).sort_stats("cumulative").print_stats(10)
 
 
 def profile_with_line_profiler():
     """Line-by-line profiling using line_profiler."""
-    print("\n=== Line Profiler ===")
     profiler = LineProfiler()
-
-    # Add the functions we want to profile
     profiler.add_function(cosmology.hubble)
     profiler.add_function(cosmology.critical_density)
 
-    # Run the code
     profiler.enable()
-    cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-    redshifts = np.linspace(0, 10, 1000)
-    cosmology.hubble(redshifts, cosmo_dict)
-    cosmology.critical_density(redshifts, cosmo_dict)
+    cosmology.hubble(REDSHIFTS, COSMO_DICT)
+    cosmology.critical_density(REDSHIFTS, COSMO_DICT)
     profiler.disable()
 
-    # Capture and save results
-    s = io.StringIO()
-    profiler.print_stats(stream=s)
-    results = s.getvalue()
-    print(results)
-
-    # Save results
-    save_results("line_profiler_results.lprof", results)
-    # Also save in a more readable format
-    save_results("line_profiler_results.log", results)
+    profiler.print_stats()
 
 
-@profile
 def profile_memory_usage():
-    """Memory profiling using memory_profiler."""
-    print("\n=== Memory Profiling ===")
-    cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-    redshifts = np.linspace(0, 10, 1000)
-
-    # Calculate values
-    hubble_values = cosmology.hubble(redshifts, cosmo_dict)
-    density_values = cosmology.critical_density(redshifts, cosmo_dict)
-
-    return hubble_values, density_values
+    """Memory profiling using memray."""
+    with memray.Tracker("memray_results.bin", native_traces=True):
+        cosmology.hubble(REDSHIFTS, COSMO_DICT)
+        cosmology.critical_density(REDSHIFTS, COSMO_DICT)
 
 
 def main():
     """Run all profiling approaches."""
-    print("Starting profiling of mycosmo package...")
-    print(f"Timestamp: {datetime.now().isoformat()}")
-    print(f"Python version: {sys.version}")
-    print(f"NumPy version: {np.__version__}")
-    print("\nSystem Information:")
-    print(f"OS: {sys.platform}")
-
-    # Run different profiling approaches
+    print("=== Timeit ===")
     profile_with_timeit()
+
+    print("\n=== cProfile ===")
     profile_with_cprofile()
+
+    print("\n=== Line Profiler ===")
     profile_with_line_profiler()
+
+    print("\n=== Memory (memray) ===")
     profile_memory_usage()
 
 

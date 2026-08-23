@@ -1,40 +1,72 @@
 [project]
 name = "mycosmo"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 authors = [{ "name" = "Samuel Farrens", "email" = "samuel.farrens@cea.fr" }]
 maintainers = [{ "name" = "Samuel Farrens", "email" = "samuel.farrens@cea.fr" }]
 description = 'This is an example cosmology package.'
-dependencies = ["numpy"]
-version = "0.0.2"
+dependencies = [
+    "numpy>=2.5.2",
+]
+version = "0.1.0"
 license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Astronomy",
 ]
 
-[project.optional-dependencies]
-docs = ["myst-parser", "numpydoc", "sphinx", "sphinx-book-theme"]
-lint = ["black", "isort"]
-release = ["python-build", "twine"]
-profile = ["line_profiler", "memory_profiler"]
-test = [
-    "pytest",
-    "pytest-cov",
-    "pytest-emoji",
-    "pytest-pydocstyle",
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+docs = [
+    "myst-parser>=5.1.0",
+    "numpydoc>=1.10.0",
+    "sphinx>=9.1.0",
+    "sphinx-book-theme>=1.4.0",
 ]
-verify = ["astropy"]
+lint = [
+    "mypy>=2.3.1",
+    "pre-commit>=4.6.2",
+    "ruff>=0.16.4",
+]
+profile = [
+    "line-profiler>=5.0.2",
+    "memray>=1.20.0",
+    "snakeviz>=2.2.2",
+]
+test = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-emoji>=0.2.0",
+]
+verify = [
+    "astropy>=8.0.1",
+]
 
-# Install for development
-dev = ["mycosmo[docs,lint,release,profile,test,verify]"]
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+disallow_untyped_defs = true
 
-[tool.pydocstyle]
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "D"]
+
+[tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"docs/**" = ["D"]
+
 [tool.pytest.ini_options]
-addopts = ["--verbose", "--emoji", "--pydocstyle", "--cov=mycosmo"]
-testpaths = ["src/mycosmo"]
+addopts = ["--verbose", "--emoji", "--cov=mycosmo", "--ignore=tests/verify"]
+testpaths = ["tests"]

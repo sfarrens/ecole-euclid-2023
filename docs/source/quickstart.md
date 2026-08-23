@@ -34,7 +34,7 @@ cosmo_dict = {
     "H0": 70,  # km/s/Mpc
     "omega_m_0": 0.3,
     "omega_k_0": 0.0,
-    "omega_lambda_0": 0.7
+    "omega_lambda_0": 0.7,
 }
 
 # Calculate H(z) at z = 0
@@ -98,4 +98,4 @@ For more advanced usage, including:
 - Additional cosmological calculations
 - Integration with other scientific packages
 
-Please refer to the full API documentation in the {doc}`modules` section. 
+Please refer to the full API documentation in the {doc}`modules` section.

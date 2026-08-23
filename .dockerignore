@@ -1,0 +1,39 @@
+# Version control
+.git/
+.gitignore
+.gitlab-ci.yml
+.github/
+
+# Docker
+.dockerignore
+Dockerfile
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+
+# Documentation build output
+docs/build/
+
+# Profiling results
+cprofile_results.prof
+memray_results.bin
+memray-flamegraph-memray_results.html
+
+# Tooling config not needed inside the image
+.pre-commit-config.yaml
+
+# Editor/IDE
+.vscode/
+.idea/

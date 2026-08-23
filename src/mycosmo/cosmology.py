@@ -9,10 +9,13 @@ import numpy as np
 from .constants import G, Mpc
 
 
-def hubble(redshift, cosmo_dict):
+def hubble(
+    redshift: float | np.ndarray, cosmo_dict: dict[str, float]
+) -> float | np.ndarray:
     r"""Hubble Parameter.
 
-    Calculate the Hubble parameter at a given redshift using the cosmological parameter values provided.
+    Calculate the Hubble parameter at a given redshift using the cosmological
+    parameter values provided.
 
     Parameters
     ----------
@@ -29,7 +32,8 @@ def hubble(redshift, cosmo_dict):
     Returns
     -------
     float or numpy.ndarray
-        Value of the Hubble parameter (km/s/Mpc) at the specified redshift(s) for a given cosmology.
+        Value of the Hubble parameter (km/s/Mpc) at the specified redshift(s)
+        for a given cosmology.
 
     Notes
     -----
@@ -39,11 +43,16 @@ def hubble(redshift, cosmo_dict):
         H(z) = \sqrt{H_0^2 (\Omega_{m,0}(1+z)^3 + \Omega_{k,0}(1+z)^2 +
             \Omega_{\Lambda,0})}
 
-    Example
-    -------
+    Examples
+    --------
     >>> from mycosmo.cosmology import hubble
-    >>> cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-    >>> hubble(0.0, cosmo_dict)
+    >>> cosmo_dict = {
+    ...     "H0": 70,
+    ...     "omega_m_0": 0.3,
+    ...     "omega_k_0": 0.0,
+    ...     "omega_lambda_0": 0.7,
+    ... }
+    >>> float(hubble(0.0, cosmo_dict))
     70.0
 
     """
@@ -55,10 +64,13 @@ def hubble(redshift, cosmo_dict):
     return np.sqrt(hubble_const**2 * (matter + curvature + dark_energy))
 
 
-def critical_density(redshift, cosmo_dict):
+def critical_density(
+    redshift: float | np.ndarray, cosmo_dict: dict[str, float]
+) -> float | np.ndarray:
     r"""Critical Density.
 
-    Calculate the critical density at a given redshift using the cosmological parameter values provided.
+    Calculate the critical density at a given redshift using the cosmological
+    parameter values provided.
 
     Parameters
     ----------
@@ -75,7 +87,8 @@ def critical_density(redshift, cosmo_dict):
     Returns
     -------
     float or numpy.ndarray
-        Value of the critical density (km/m^3) at the specified redshift(s) for a given cosmology.
+        Value of the critical density (km/m^3) at the specified redshift(s) for a
+        given cosmology.
 
     Notes
     -----
@@ -85,11 +98,16 @@ def critical_density(redshift, cosmo_dict):
 
         \rho_c(z) = \frac{3H^2(z)}{8\pi G}
 
-    Example
-    -------
+    Examples
+    --------
     >>> from mycosmo.cosmology import critical_density
-    >>> cosmo_dict = {"H0": 70, "omega_m_0": 0.3, "omega_k_0": 0.0, "omega_lambda_0": 0.7}
-    >>> critical_density(0.0, cosmo_dict)
+    >>> cosmo_dict = {
+    ...     "H0": 70,
+    ...     "omega_m_0": 0.3,
+    ...     "omega_k_0": 0.0,
+    ...     "omega_lambda_0": 0.7,
+    ... }
+    >>> float(critical_density(0.0, cosmo_dict))
     9.203859495267889e-27
 
     """

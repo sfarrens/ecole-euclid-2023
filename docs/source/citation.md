@@ -40,4 +40,4 @@ If you use `mycosmo` in your research, please cite the following paper:
 
 ## Plain Text Citation
 
-Farrens, S., & Collaborators. (2024). mycosmo: A Python Package for Cosmological Calculations. Journal of Open Source Software, 9(96), 1234. https://doi.org/10.21105/joss.01234 
+Farrens, S., & Collaborators. (2024). mycosmo: A Python Package for Cosmological Calculations. Journal of Open Source Software, 9(96), 1234. https://doi.org/10.21105/joss.01234
