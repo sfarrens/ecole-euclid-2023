@@ -2,22 +2,5 @@ name: mycosmo
 channels:
   - conda-forge
 dependencies:
-  - python=3.13
+  - python=3.12
   - numpy>=1.25
-  - astropy
-  - black
-  - isort
-  - myst-parser
-  - numpydoc
-  - pytest
-  - pytest-emoji
-  - pytest-cov
-  - python-build
-  - sphinx
-  - sphinx-book-theme
-  - twine
-  - pip
-  - pip:
-    - pytest-pydocstyle
-    - line_profiler
-    - memory_profiler

@@ -48,7 +48,7 @@ If you use this package in your work, please see the :doc:`citation` page for ci
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
+
    about
    quickstart
    dependencies

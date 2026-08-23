@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: mycosmo
+version: 0.1.0
+date-released: "2026-08-21"
+authors:
+  - family-names: Farrens
+    given-names: Samuel
+repository-code: "https://github.com/sfarrens/Scientific-Software-Dev-Demo"
+url: "https://sfarrens.github.io/Scientific-Software-Dev-Demo/"
+license: MIT

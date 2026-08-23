@@ -1,35 +1,40 @@
-image: python:latest
+image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-before_script:
-  - python --version 
-  - python -m pip install ".[dev]"
+variables:
+  UV_CACHE_DIR: $CI_PROJECT_DIR/.uv-cache
+
+cache:
+  key: uv-cache
+  paths:
+    - .uv-cache/
+
+lint:
+  interruptible: true
+  script:
+    - uv sync --group lint
+    - uv run ruff format --check .
+    - uv run ruff check .
+    - uv run mypy src
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 test:
+  interruptible: true
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   script:
-    - python -m pytest
-    - black --check .
-    - isort --check .
-  only:
-    refs:
-      - merge_requests
-
-# Run verification tests
-Verification:
-  script:
-    - export TF_CPP_MIN_LOG_LEVEL=1
-    - python -m pytest scripts/astropy_verification.py
-  when: manual
-  only:
-    - merge_requests
+    - uv sync --group test
+    - uv run pytest
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 pages:
   script:
-    - sphinx-apidoc -Mfeo docs/source mycosmo
-    - sphinx-build docs/source docs/build
+    - uv sync --group docs
+    - uv run sphinx-apidoc -Mfeo docs/source src/mycosmo
+    - uv run sphinx-build docs/source docs/build
     - mv docs/build public/
   artifacts:
     paths:
       - public
-  only:
-      - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
