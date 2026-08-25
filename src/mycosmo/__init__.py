@@ -1,2 +1,5 @@
-def hello() -> str:
-    return "Hello from mycosmo!"
+"""MyCosmo.
+
+This is an example cosmology package.
+
+"""
