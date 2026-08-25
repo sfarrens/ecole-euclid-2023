@@ -33,9 +33,12 @@ test = [
     "pytest-cov>=7.1.0",
     "pytest-emoji>=0.2.0",
 ]
+verify = [
+    "astropy>=8.0.1",
+]
 
 [tool.pytest.ini_options]
-addopts = ["--verbose", "--emoji", "--cov=mycosmo"]
+addopts = ["--verbose", "--emoji", "--cov=mycosmo", "--ignore=tests/verify"]
 testpaths = ["tests"]
 
 [tool.ruff]
