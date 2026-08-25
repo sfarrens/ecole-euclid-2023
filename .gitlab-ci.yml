@@ -26,3 +26,15 @@ test:
     - uv run pytest
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+pages:
+  script:
+    - uv sync --group docs
+    - uv run sphinx-apidoc -Mfeo docs/source src/mycosmo
+    - uv run sphinx-build docs/source docs/build
+    - mv docs/build public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
