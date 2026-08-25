@@ -16,6 +16,10 @@ requires = ["uv_build>=0.12.3,<0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
+lint = [
+    "pre-commit>=4.6.2",
+    "ruff>=0.16.4",
+]
 test = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
@@ -25,3 +29,10 @@ test = [
 [tool.pytest.ini_options]
 addopts = ["--verbose", "--emoji", "--cov=mycosmo"]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
