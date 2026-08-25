@@ -1,0 +1,28 @@
+image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+variables:
+  UV_CACHE_DIR: $CI_PROJECT_DIR/.uv-cache
+
+cache:
+  key: uv-cache
+  paths:
+    - .uv-cache/
+
+lint:
+  interruptible: true
+  script:
+    - uv sync --group lint
+    - uv run ruff format --check .
+    - uv run ruff check .
+    - uv run mypy src
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+test:
+  interruptible: true
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  script:
+    - uv sync --group test
+    - uv run pytest
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
