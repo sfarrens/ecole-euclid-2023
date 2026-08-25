@@ -11,3 +11,8 @@ wheels/
 
 # Test results
 .coverage
+
+# Profiling results
+cprofile_results.prof
+memray_results.bin
+memray-flamegraph-memray_results.html

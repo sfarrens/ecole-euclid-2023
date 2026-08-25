@@ -28,6 +28,11 @@ lint = [
     "pre-commit>=4.6.2",
     "ruff>=0.16.4",
 ]
+profile = [
+    "line-profiler>=5.0.2",
+    "memray>=1.20.0",
+    "snakeviz>=2.2.2",
+]
 test = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
