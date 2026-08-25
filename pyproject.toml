@@ -17,6 +17,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 lint = [
+    "mypy>=2.3.1",
     "pre-commit>=4.6.2",
     "ruff>=0.16.4",
 ]
@@ -36,3 +37,8 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+disallow_untyped_defs = true
